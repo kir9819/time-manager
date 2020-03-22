@@ -1,16 +1,16 @@
 <template>
 	<div class="home">
-		<InitComponent msg="Welcome to Your Vue.js App"/>
+		<TimeStamps/>
 	</div>
 </template>
 
 <script>
-import InitComponent from 'Components/InitComponent.vue'
+import TimeStamps from 'Components/TimeStamps.vue'
 
 export default {
 	name: 'Home',
 	components: {
-		InitComponent,
+		TimeStamps,
 	},
 }
 </script>
