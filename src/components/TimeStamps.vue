@@ -6,7 +6,7 @@
 				:key="timeStamp.index"
 				:class="{ active: currentTimeStamp === timeStamp }"
 				:item="timeStamp"
-				@click.native="changeCurrentTimeStamp(timeStamp)"
+				@click.native="select(timeStamp)"
 			/>
 
 			<div class="time-stamp add-one" @click="add">
@@ -18,7 +18,7 @@
 			<div>Текущий: {{ currentTimeStamp.index }}</div>
 			<div>
 				<span>Описание: </span>
-				<input v-model="currentTimeStamp.description">
+				<input :value="currentTimeStamp.description" @change="changeDescription({ description: $event.target.value })">
 			</div>
 			<div>
 				<span>Время: </span>
@@ -29,45 +29,32 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import { RootMapper } from 'Plugins/store/modules/root'
 import TimeStampItem from './TimeStampItem.vue'
-import { TimeStamps } from './TimeStamps'
 
 const DEFAULT_TIME_STAMPS_AMOUNT: number = 9
 
+const Mappers = Vue.extend({
+	computed: {
+		...RootMapper.mapState(['currentTimeStamp', 'timeStampList']),
+	},
+	methods: {
+		...RootMapper.mapActions(['select']),
+		...RootMapper.mapMutations(['add', 'changeDescription']),
+		...RootMapper.mapMutations({ onlySelect: 'select' }),
+	},
+})
+
 @Component({ name: 'TimeStamps', components: { TimeStampItem } })
-export default class TimeStampsComponent extends Vue {
-	timeStampList: Array<TimeStamps>
-
-	currentTimeStamp: TimeStamps
-
-	static INDEX: number = 0
-
-	constructor() {
-		super()
-
-		this.timeStampList = []
-
-		for (let i = 0; i < DEFAULT_TIME_STAMPS_AMOUNT; i += 1) {
-			this.timeStampList.push(new TimeStamps('', ++TimeStampsComponent.INDEX)) // eslint-disable-line
+export default class TimeStampsComponent extends Mappers {
+	created() {
+		if (this.timeStampList.length === 0) {
+			for (let i = 0; i < DEFAULT_TIME_STAMPS_AMOUNT; i += 1) {
+				this.add()
+			}
 		}
 
-		this.currentTimeStamp = this.timeStampList[0] // eslint-disable-line
-	}
-
-	add(): void {
-		this.timeStampList.push(new TimeStamps('', ++TimeStampsComponent.INDEX)) // eslint-disable-line
-	}
-
-	changeCurrentTimeStamp(timeStamp: TimeStamps): void {
-		if (this.currentTimeStamp === timeStamp) {
-			if (this.currentTimeStamp.timer) this.currentTimeStamp.stop()
-			else this.currentTimeStamp.run()
-			return
-		}
-
-		this.currentTimeStamp.stop()
-		this.currentTimeStamp = timeStamp
-		this.currentTimeStamp.run()
+		this.onlySelect(this.timeStampList[0])
 	}
 }
 </script>

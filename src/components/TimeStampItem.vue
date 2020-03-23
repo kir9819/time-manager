@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
-import { TimeStamps } from './TimeStamps' // eslint-disable-line
+import { TimeStamps } from 'Utils/ts/TimeStamps' // eslint-disable-line
 
 @Component
 export default class TimeStampItem extends Vue {
