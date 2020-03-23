@@ -7,23 +7,35 @@ import { TimeStamp } from 'Utils/ts/TimeStamp'
 class RootState {
 	timeStampList: Array<TimeStamps> = []
 
-	currentTimeStamp?: TimeStamps
+	currrentTimeStampIndex: number = -1
 
 	static INDEX: number = 0
 }
+
+class RootGetters extends Getters<RootState> {
+	getTimeStampByIndex(index: number): TimeStamps | void {
+		return this.state.timeStampList.find(ts => ts.index === index)
+	}
+
+	get currentTimeStamp(): TimeStamps | void {
+		return this.getters.getTimeStampByIndex(this.state.currrentTimeStampIndex)
+	}
+}
+
 
 class RootMutations extends Mutations<RootState> {
 	add(description: string = ''): void {
 		this.state.timeStampList.push(new TimeStamps(description, RootState.INDEX += 1))
 	}
 
-	select(timeStamp: TimeStamps): void {
-		this.state.currentTimeStamp = timeStamp
+	select(index: number): void {
+		this.state.currrentTimeStampIndex = index
 	}
 
 	changeDescription(payload: { description: string, index?: number }): void {
 		if (!payload.index) {
-			if (this.state.currentTimeStamp) this.state.currentTimeStamp.description = payload.description
+			const currrentTimeStamp = this.state.timeStampList.find(ts => ts.index === this.state.currrentTimeStampIndex)
+			if (currrentTimeStamp) currrentTimeStamp.description = payload.description
 			return
 		}
 
@@ -70,16 +82,17 @@ class RootMutations extends Mutations<RootState> {
 }
 
 
-class RootActions extends Actions<RootState, Getters<RootState>, RootMutations, RootActions> {
+class RootActions extends Actions<RootState, RootGetters, RootMutations, RootActions> {
 	select(timeStamp: TimeStamps): void {
-		if (this.state.currentTimeStamp === timeStamp) {
-			if (this.state.currentTimeStamp.timer) this.dispatch('stop', timeStamp.index)
-			else this.dispatch('run', timeStamp.index)
+		if (this.state.currrentTimeStampIndex === timeStamp.index) {
+			if (this.getters.currentTimeStamp && this.getters.currentTimeStamp.timer) this.dispatch('stop', this.state.currrentTimeStampIndex)
+			else this.dispatch('run', this.state.currrentTimeStampIndex)
 			return
 		}
 
-		if (this.state.currentTimeStamp) this.dispatch('stop', this.state.currentTimeStamp.index)
-		this.state.currentTimeStamp = timeStamp
+
+		this.dispatch('stop', this.state.currrentTimeStampIndex)
+		this.commit('select', timeStamp.index)
 		this.dispatch('run', timeStamp.index)
 	}
 
@@ -103,6 +116,7 @@ class RootActions extends Actions<RootState, Getters<RootState>, RootMutations, 
 
 const module = new Module({
 	state: RootState,
+	getters: RootGetters,
 	mutations: RootMutations,
 	actions: RootActions,
 })

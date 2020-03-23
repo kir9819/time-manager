@@ -36,7 +36,8 @@ const DEFAULT_TIME_STAMPS_AMOUNT: number = 9
 
 const Mappers = Vue.extend({
 	computed: {
-		...RootMapper.mapState(['currentTimeStamp', 'timeStampList']),
+		...RootMapper.mapState(['timeStampList']),
+		...RootMapper.mapGetters(['currentTimeStamp']),
 	},
 	methods: {
 		...RootMapper.mapActions(['select']),
@@ -54,7 +55,7 @@ export default class TimeStampsComponent extends Mappers {
 			}
 		}
 
-		this.onlySelect(this.timeStampList[0])
+		this.onlySelect(1)
 	}
 }
 </script>
