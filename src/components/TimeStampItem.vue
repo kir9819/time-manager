@@ -3,7 +3,7 @@
 		<span class="time-stamp-index">{{ item.index }}</span>
 		<div class="time-stamp-description">{{ item.description }}</div>
 		<div class="time-stamp-time">Время: {{ totalTime }}</div>
-		<div class="time-stamp-status">{{ isRunning ? '▶️' : '⏸️' }}</div>
+		<div class="time-stamp-status">{{ isRunning ? '⏸️' : '▶️' }}</div>
 	</div>
 </template>
 

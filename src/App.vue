@@ -30,6 +30,7 @@
 	justify-content: space-around;
 	box-shadow: 0 -1px 1px lightblue;
 	line-height: 1;
+	background-color: #fff;
 
 	a {
 		font-weight: bold;

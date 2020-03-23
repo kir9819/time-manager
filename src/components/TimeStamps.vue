@@ -83,10 +83,10 @@ export default class TimeStampsComponent extends Mappers {
 	line-height: 1.5;
 	position: relative;
 
-	min-width: 120px;
+	min-width: 110px;
 	width: 100%;
-	max-width: 32%;
-	min-height: 120px;
+	max-width: 31%;
+	min-height: 110px;
 
 	&-index {
 		font-size: 20px;
