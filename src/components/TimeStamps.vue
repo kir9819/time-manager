@@ -1,67 +1,141 @@
 <template>
-	<div class="hello">
-		<div
-			v-for="timeStamp in timeStampList"
-			:key="timeStamp.index"
-			class="time-stamp"
-			:class="{ active: currentTimeStamp === timeStamp }"
-			@click="changeCurrentTimeStamp(timeStamp)"
-		>{{ timeStamp.index }}</div>
+	<div>
+		<div class="hello">
+			<TimeStampItem
+				v-for="timeStamp in timeStampList"
+				:key="timeStamp.index"
+				:class="{ active: currentTimeStamp === timeStamp }"
+				:item="timeStamp"
+				@click.native="changeCurrentTimeStamp(timeStamp)"
+			/>
 
-		<div class="time-stamp add-one" @click="add">+</div>
+			<div class="time-stamp add-one" @click="add">
+				<div class="time-stamp-body">+</div>
+			</div>
+		</div>
+
+		<div style="margin-top: 40px; text-align: left; line-height: 1.5;">
+			<div>Текущий: {{ currentTimeStamp.index }}</div>
+			<div>
+				<span>Описание: </span>
+				<input v-model="currentTimeStamp.description">
+			</div>
+			<div>
+				<span>Время: </span>
+			</div>
+		</div>
 	</div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { TimeStamp } from './TimeStamp'
+import TimeStampItem from './TimeStampItem.vue'
+import { TimeStamps } from './TimeStamps'
 
-@Component({ name: 'TimeStamps' })
-export default class TimeStamps extends Vue {
-	timeStampList: Array<TimeStamp>
+const DEFAULT_TIME_STAMPS_AMOUNT: number = 9
 
-	currentTimeStamp: TimeStamp
+@Component({ name: 'TimeStamps', components: { TimeStampItem } })
+export default class TimeStampsComponent extends Vue {
+	timeStampList: Array<TimeStamps>
+
+	currentTimeStamp: TimeStamps
+
+	static INDEX: number = 0
 
 	constructor() {
 		super()
 
-		const firstTimeStamp = new TimeStamp('')
+		this.timeStampList = []
 
-		this.timeStampList = new Array(firstTimeStamp)
-		this.currentTimeStamp = firstTimeStamp
-	}
+		for (let i = 0; i < DEFAULT_TIME_STAMPS_AMOUNT; i += 1) {
+			this.timeStampList.push(new TimeStamps('', ++TimeStampsComponent.INDEX)) // eslint-disable-line
+		}
 
-	get sortedList() {
-		const timeStampListCopy = [...this.timeStampList]
-		return timeStampListCopy.sort((ts1, ts2) => ts1.index - ts2.index)
+		this.currentTimeStamp = this.timeStampList[0] // eslint-disable-line
 	}
 
 	add(): void {
-		this.timeStampList.push(new TimeStamp(''))
+		this.timeStampList.push(new TimeStamps('', ++TimeStampsComponent.INDEX)) // eslint-disable-line
 	}
 
-	changeCurrentTimeStamp(timeStamp: TimeStamp): void {
+	changeCurrentTimeStamp(timeStamp: TimeStamps): void {
+		if (this.currentTimeStamp === timeStamp) {
+			if (this.currentTimeStamp.timer) this.currentTimeStamp.stop()
+			else this.currentTimeStamp.run()
+			return
+		}
+
+		this.currentTimeStamp.stop()
 		this.currentTimeStamp = timeStamp
+		this.currentTimeStamp.run()
 	}
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
+<style lang="scss">
 .hello {
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: center;
+	align-items: center;
 }
 
 .time-stamp {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
 	padding: 12px;
 	margin: 4px;
 	cursor: pointer;
+	user-select: none;
 	border-radius: 8px;
-	border: 1px solid transparent;
+	border: 1px solid lightblue;
+	box-sizing: border-box;
+	line-height: 1.5;
+	position: relative;
 
-	&.active, &.add-one {
-		border: 1px solid lightblue;
+	min-width: 120px;
+	width: 100%;
+	max-width: 32%;
+	min-height: 120px;
+
+	&-index {
+		font-size: 20px;
+	}
+
+	&-description {
+		font-size: 14px;
+	}
+
+	&-time {
+		margin-top: 8px;
+	}
+
+	&-status {
+		position: absolute;
+		top: 4px;
+		right: 4px;
+		font-size: 20px;
+	}
+
+	&.active {
+		background-color: lightblue;
+	}
+
+	&.add-one {
+		border-color: transparent;
+		justify-content: center;
+
+		.time-stamp-body {
+			width: 40px;
+			height: 40px;
+			line-height: 40px;
+			border-radius: 100%;
+			text-align: center;
+			border: 1px solid lightblue;
+		}
 	}
 }
 

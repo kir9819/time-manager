@@ -14,15 +14,12 @@ class TimeStamp implements ITimeStamp {
 
 	index: number
 
-	static lastIndex: number = 0
-
-	constructor(description: string) {
+	constructor(description: string, index: number) {
 		this.start = new Date()
 		this.end = new Date()
-		this.description = description
 
-		TimeStamp.lastIndex += 1
-		this.index = TimeStamp.lastIndex
+		this.description = description
+		this.index = index
 	}
 }
 
