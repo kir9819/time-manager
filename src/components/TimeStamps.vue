@@ -53,9 +53,9 @@ export default class TimeStampsComponent extends Mappers {
 			for (let i = 0; i < DEFAULT_TIME_STAMPS_AMOUNT; i += 1) {
 				this.add()
 			}
-		}
 
-		this.onlySelect(1)
+			this.onlySelect(1)
+		}
 	}
 }
 </script>
