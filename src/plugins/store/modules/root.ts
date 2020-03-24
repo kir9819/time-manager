@@ -28,7 +28,6 @@ class RootGetters extends Getters<RootState> {
 class RootMutations extends Mutations<RootState> {
 	createStore(timeStamps: Array<TimeStamps>) {
 		this.state.timeStampList = timeStamps
-		this.state.currrentTimeStampIndex = timeStamps[0].index
 	}
 
 	add(description: string = ''): void {
@@ -100,6 +99,16 @@ class RootActions extends Actions<RootState, RootGetters, RootMutations, RootAct
 
 		if (timeStamps.length > 0) {
 			this.commit('createStore', timeStamps)
+
+			const findRunning = timeStamps.find(ts => ts.timer)
+
+			if (findRunning) {
+				this.commit('select', findRunning.index)
+				this.commit('stopTimeStamp', findRunning.index)
+				this.dispatch('run', findRunning.index)
+			} else {
+				this.commit('select', timeStamps[0].index)
+			}
 		} else if (this.state.timeStampList.length === 0) {
 			for (let i = 0; i < DEFAULT_TIME_STAMPS_AMOUNT; i += 1) {
 				this.commit('add')
