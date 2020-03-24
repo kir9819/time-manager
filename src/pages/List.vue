@@ -11,7 +11,10 @@
 				class="list-item-input"
 				@change="changeDescription({ index: timeStamp.index, description: $event.target.value })"
 			>
+			<span class="list-item-clear" @click="clearTimeStamps(timeStamp.index)">Очистить</span>
 		</div>
+
+		<div class="clear-all" @click="clearAllTimeStamps">Очистить все</div>
 	</div>
 </template>
 
@@ -27,6 +30,7 @@ const Mappers = Vue.extend({
 	},
 	methods: {
 		...RootMapper.mapMutations(['changeDescription']),
+		...RootMapper.mapActions(['clearTimeStamps', 'clearAllTimeStamps']),
 	},
 })
 
@@ -49,6 +53,16 @@ export default class TimeStampsComponent extends Mappers {}
 		&-index {
 			margin-right: 8px;
 		}
+
+		&-clear {
+			cursor: pointer;
+			margin-left: 4px;
+		}
+	}
+
+	.clear-all {
+		cursor: pointer;
+		margin-top: 16px;
 	}
 }
 </style>

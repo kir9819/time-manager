@@ -91,6 +91,17 @@ class RootMutations extends Mutations<RootState> {
 	saveDataInDB(): void {
 		DB.addTimeStamps(this.state.timeStampList)
 	}
+
+	clearTimeStamps(index: number): void {
+		const timeStampByIndex = this.state.timeStampList.find(ts => ts.index === index)
+
+		if (timeStampByIndex) {
+			timeStampByIndex.timeStamps = []
+			timeStampByIndex.totalms = 0
+			timeStampByIndex.description = ''
+			timeStampByIndex.currentTimeStamp = timeStampByIndex.timeStamps[0] // eslint-disable-line
+		}
+	}
 }
 
 class RootActions extends Actions<RootState, RootGetters, RootMutations, RootActions> {
@@ -163,6 +174,23 @@ class RootActions extends Actions<RootState, RootGetters, RootMutations, RootAct
 	stop(index: number): void {
 		this.commit('clearInterval', index)
 		this.commit('stopTimeStamp', index)
+		this.commit('saveDataInDB')
+	}
+
+
+	clearTimeStamps(index: number): void {
+		this.dispatch('stop', index)
+		this.commit('clearTimeStamps', index)
+		this.commit('saveDataInDB')
+	}
+
+	clearAllTimeStamps(): void {
+		this.dispatch('stop', this.state.currrentTimeStampIndex)
+
+		this.state.timeStampList.forEach(ts => {
+			this.commit('clearTimeStamps', ts.index)
+		})
+
 		this.commit('saveDataInDB')
 	}
 }
