@@ -9,12 +9,12 @@
 				@click.native="select(timeStamp)"
 			/>
 
-			<div class="time-stamp add-one" @click="add">
+			<div class="time-stamp add-one" @click="add()">
 				<div class="time-stamp-body">+</div>
 			</div>
 		</div>
 
-		<div style="margin-top: 40px; text-align: left; line-height: 1.5;">
+		<div v-if="currentTimeStamp" style="margin-top: 40px; text-align: left; line-height: 1.5;">
 			<div>Текущий: {{ currentTimeStamp.index }}</div>
 			<div>
 				<span>Описание: </span>
@@ -32,8 +32,6 @@ import { Component, Vue } from 'vue-property-decorator'
 import { RootMapper } from 'Plugins/store/modules/root'
 import TimeStampItem from './TimeStampItem.vue'
 
-const DEFAULT_TIME_STAMPS_AMOUNT: number = 9
-
 const Mappers = Vue.extend({
 	computed: {
 		...RootMapper.mapState(['timeStampList']),
@@ -47,17 +45,7 @@ const Mappers = Vue.extend({
 })
 
 @Component({ name: 'TimeStamps', components: { TimeStampItem } })
-export default class TimeStampsComponent extends Mappers {
-	created() {
-		if (this.timeStampList.length === 0) {
-			for (let i = 0; i < DEFAULT_TIME_STAMPS_AMOUNT; i += 1) {
-				this.add()
-			}
-
-			this.onlySelect(1)
-		}
-	}
-}
+export default class TimeStampsComponent extends Mappers {}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

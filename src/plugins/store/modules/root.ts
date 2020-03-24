@@ -1,8 +1,11 @@
 /* eslint-disable max-classes-per-file */
 
 import { Getters, Mutations, Actions, Module, createMapper } from 'vuex-smart-module'
-import { TimeStamps } from 'Utils/ts/TimeStamps'
+import { TimeStamps, createTimeStamps } from 'Utils/ts/TimeStamps'
 import { TimeStamp } from 'Utils/ts/TimeStamp'
+import DB from 'Plugins/db'
+
+const DEFAULT_TIME_STAMPS_AMOUNT: number = 9
 
 class RootState {
 	timeStampList: Array<TimeStamps> = []
@@ -23,6 +26,11 @@ class RootGetters extends Getters<RootState> {
 }
 
 class RootMutations extends Mutations<RootState> {
+	createStore(timeStamps: Array<TimeStamps>) {
+		this.state.timeStampList = timeStamps
+		this.state.currrentTimeStampIndex = timeStamps[0].index
+	}
+
 	add(description: string = ''): void {
 		this.state.timeStampList.push(new TimeStamps(description, RootState.INDEX += 1))
 	}
@@ -52,7 +60,9 @@ class RootMutations extends Mutations<RootState> {
 		const timeStamp = new TimeStamp(payload.description, payload.index)
 		const timeStampByIndex = this.state.timeStampList.find(ts => ts.index === payload.index)
 
+
 		if (timeStampByIndex) {
+			timeStampByIndex.totalms = timeStampByIndex.timeStamps.reduce((total, current) => total + current.end.getTime() - current.start.getTime(), 0)
 			timeStampByIndex.currentTimeStamp = timeStamp
 			timeStampByIndex.timeStamps.push(timeStamp)
 		}
@@ -67,8 +77,6 @@ class RootMutations extends Mutations<RootState> {
 			if (currentTimeStamp) {
 				currentTimeStamp.end = new Date()
 			}
-
-			timeStampByIndex.totalms = timeStampByIndex.timeStamps.reduce((total, current) => total + current.end.getTime() - current.start.getTime(), 0)
 		}
 	}
 
@@ -80,9 +88,34 @@ class RootMutations extends Mutations<RootState> {
 			timeStampByIndex.timer = 0
 		}
 	}
+
+	saveDataInDB(): void {
+		DB.addTimeStamps(this.state.timeStampList)
+	}
 }
 
 class RootActions extends Actions<RootState, RootGetters, RootMutations, RootActions> {
+	async $init(): Promise<void> {
+		const timeStamps = await this.getDataFromDB()
+
+		if (timeStamps.length > 0) {
+			this.commit('createStore', timeStamps)
+		} else if (this.state.timeStampList.length === 0) {
+			for (let i = 0; i < DEFAULT_TIME_STAMPS_AMOUNT; i += 1) {
+				this.commit('add')
+			}
+
+			this.commit('select', 1)
+		}
+	}
+
+	/* eslint class-methods-use-this: ["error", { "exceptMethods": ["getDataFromDB"] }] */
+
+	async getDataFromDB(): Promise<Array<TimeStamps>> {
+		const timeStamps = await DB.getCurrentDayTimeStamps()
+		return timeStamps
+	}
+
 	select(timeStamp: TimeStamps): void {
 		if (this.state.currrentTimeStampIndex === timeStamp.index) {
 			if (this.getters.currentTimeStamp && this.getters.currentTimeStamp.timer) this.dispatch('stop', this.state.currrentTimeStampIndex)
@@ -97,19 +130,31 @@ class RootActions extends Actions<RootState, RootGetters, RootMutations, RootAct
 
 	run(index: number): void {
 		this.commit('addTimeStamp', { description: '', index })
+
+		let i = 0
+
 		this.commit('setTimer', {
 			index,
 			timer: setInterval(() => {
 				const timeStampByIndex = this.state.timeStampList.find(ts => ts.index === index)
 				if (!timeStampByIndex || !timeStampByIndex.currentTimeStamp) this.commit('clearInterval', index)
 				else this.commit('stopTimeStamp', index)
+
+				i += 1
+				if (i >= 5) {
+					this.commit('saveDataInDB')
+					i = 0
+				}
 			}, 1000),
 		})
+
+		this.commit('saveDataInDB')
 	}
 
 	stop(index: number): void {
 		this.commit('clearInterval', index)
 		this.commit('stopTimeStamp', index)
+		this.commit('saveDataInDB')
 	}
 }
 
