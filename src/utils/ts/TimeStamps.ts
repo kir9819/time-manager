@@ -11,6 +11,8 @@ class TimeStamps {
 
 	currentTimeStamp?: TimeStamp
 
+	totalms: number = 0
+
 	constructor(description: string, index: number) {
 		this.timeStamps = []
 

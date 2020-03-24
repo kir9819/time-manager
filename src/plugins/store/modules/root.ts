@@ -22,7 +22,6 @@ class RootGetters extends Getters<RootState> {
 	}
 }
 
-
 class RootMutations extends Mutations<RootState> {
 	add(description: string = ''): void {
 		this.state.timeStampList.push(new TimeStamps(description, RootState.INDEX += 1))
@@ -68,6 +67,8 @@ class RootMutations extends Mutations<RootState> {
 			if (currentTimeStamp) {
 				currentTimeStamp.end = new Date()
 			}
+
+			timeStampByIndex.totalms = timeStampByIndex.timeStamps.reduce((total, current) => total + current.end.getTime() - current.start.getTime(), 0)
 		}
 	}
 
@@ -81,7 +82,6 @@ class RootMutations extends Mutations<RootState> {
 	}
 }
 
-
 class RootActions extends Actions<RootState, RootGetters, RootMutations, RootActions> {
 	select(timeStamp: TimeStamps): void {
 		if (this.state.currrentTimeStampIndex === timeStamp.index) {
@@ -89,7 +89,6 @@ class RootActions extends Actions<RootState, RootGetters, RootMutations, RootAct
 			else this.dispatch('run', this.state.currrentTimeStampIndex)
 			return
 		}
-
 
 		this.dispatch('stop', this.state.currrentTimeStampIndex)
 		this.commit('select', timeStamp.index)

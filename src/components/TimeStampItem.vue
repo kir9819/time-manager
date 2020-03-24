@@ -15,13 +15,16 @@ import { TimeStamps } from 'Utils/ts/TimeStamps' // eslint-disable-line
 export default class TimeStampItem extends Vue {
 	@Prop(Object) private item!: TimeStamps
 
-	get totalTime(): number {
-		const totalSeconds = this.item.timeStamps.reduce((total, current) => {
-			total += current.end.getTime() - current.start.getTime() // eslint-disable-line
-			return total
-		}, 0) / 1000
+	get currentTimeStampTime(): number {
+		if (this.item.currentTimeStamp) {
+			return this.item.currentTimeStamp.end.getTime() - this.item.currentTimeStamp.start.getTime()
+		}
 
-		return totalSeconds
+		return 0
+	}
+
+	get totalTime(): number {
+		return (this.item.totalms + this.currentTimeStampTime) / 1000
 	}
 
 	get totalTimeString(): string {
