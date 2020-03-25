@@ -54,7 +54,6 @@ export default class TimeStampsComponent extends Mappers {}
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
-	align-items: center;
 }
 
 .time-stamp {
@@ -62,7 +61,7 @@ export default class TimeStampsComponent extends Mappers {}
 	flex-direction: column;
 	justify-content: space-between;
 	align-items: center;
-	padding: 12px;
+	padding: 4px;
 	margin: 4px;
 	cursor: pointer;
 	user-select: none;
@@ -82,7 +81,8 @@ export default class TimeStampsComponent extends Mappers {}
 	}
 
 	&-description {
-		font-size: 14px;
+		font-size: 12px;
+		margin-top: 4px;
 	}
 
 	&-time {

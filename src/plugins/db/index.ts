@@ -2,7 +2,7 @@ import { openDB, DBSchema } from 'idb'
 import { TimeStamps } from 'Utils/ts/TimeStamps'
 import { getDate } from 'Utils/index'
 
-const DB_VERSION: number = 1
+const DB_VERSION: number = 2
 
 interface TimeStampsDB extends DBSchema {
 	days: {
@@ -17,6 +17,9 @@ interface TimeStampsDB extends DBSchema {
 const dbRequest = openDB<TimeStampsDB>('timeStamps', DB_VERSION, {
 	upgrade(db) {
 		if (!db.objectStoreNames.contains('days')) {
+			db.createObjectStore('days', { keyPath: 'date' })
+		} else {
+			db.deleteObjectStore('days')
 			db.createObjectStore('days', { keyPath: 'date' })
 		}
 	},
