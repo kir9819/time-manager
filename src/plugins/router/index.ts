@@ -6,7 +6,7 @@ Vue.use(VueRouter)
 
 const router = new VueRouter({
 	mode: 'history',
-	base: '/',
+	base: process.env.NODE_ENV === 'production' ? '/time-manager/' : '/',
 	routes,
 })
 
