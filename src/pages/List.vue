@@ -3,7 +3,7 @@
 		<div
 			v-for="timeStamp in timeStampList"
 			:key="timeStamp.index"
-			class="list-item"
+			class="list-item layout"
 		>
 			<span class="list-item-index">{{ timeStamp.index }}</span>
 			<input
@@ -45,10 +45,12 @@ export default class TimeStampsComponent extends Mappers {}
 	align-items: center;
 
 	.list-item {
-		padding: 8px;
+		padding: 16px 8px;
 		margin: 4px;
-		border-bottom: 1px solid lightblue;
+		border-radius: 8px;
 		max-width: 320px;
+		width: 100%;
+		box-sizing: border-box;
 
 		&-index {
 			margin-right: 8px;
@@ -56,13 +58,16 @@ export default class TimeStampsComponent extends Mappers {}
 
 		&-clear {
 			cursor: pointer;
-			margin-left: 4px;
+			margin-left: 8px;
+
+			font-size: 12px;
 		}
 	}
 
 	.clear-all {
 		cursor: pointer;
 		margin-top: 16px;
+		font-size: 12px;
 	}
 }
 </style>

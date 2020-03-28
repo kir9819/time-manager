@@ -1,18 +1,34 @@
 <template>
 	<div class="time-stamp">
-		<span class="time-stamp-index">{{ item.index }}</span>
-		<div class="time-stamp-description">{{ item.description }}</div>
-		<div class="time-stamp-time">{{ totalTimeString }}</div>
-		<div class="time-stamp-status">{{ isRunning ? '⏸️' : '▶️' }}</div>
+		<div
+			class="time-stamp-body layout"
+			:class="{ active: currentTimeStamp === item }"
+			@click="select(item)"
+		>
+			<span class="time-stamp-index">{{ item.index }}</span>
+			<div class="time-stamp-description">{{ item.description }}</div>
+			<div class="time-stamp-time">{{ totalTimeString }}</div>
+			<div class="time-stamp-status">{{ isRunning ? '⏸️' : '▶️' }}</div>
+		</div>
 	</div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
+import { RootMapper } from 'Plugins/store/modules/root'
 import { TimeStamps } from 'Utils/ts/TimeStamps' // eslint-disable-line
 
+const Mappers = Vue.extend({
+	computed: {
+		...RootMapper.mapGetters(['currentTimeStamp']),
+	},
+	methods: {
+		...RootMapper.mapActions(['select']),
+	},
+})
+
 @Component
-export default class TimeStampItem extends Vue {
+export default class TimeStampItem extends Mappers {
 	@Prop(Object) private item!: TimeStamps
 
 	get currentTimeStampTime(): number {

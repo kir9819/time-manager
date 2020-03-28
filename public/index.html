@@ -1,17 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title><%= htmlWebpackPlugin.options.title %></title>
-  </head>
-  <body>
-    <noscript>
-      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-  </body>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+		<link rel="icon" href="<%= BASE_URL %>favicon.ico">
+		<title><%= htmlWebpackPlugin.options.title %></title>
+		<style type="text/css">
+			:root {
+				--root-background: white;
+				--root-color: #2c3e50;
+				--color-primary: #B3E5FC;
+				--color-layout: #EEEEEE;
+				--color-active: #66BB6A;
+			}
+			@media (prefers-color-scheme: dark) {
+				:root {
+					--root-background: black;
+					--root-color: #BDBDBD;
+					--color-primary: #4A148C;
+					--color-layout: #212121;
+					--color-active: #388E3C;
+				}
+			}
+
+			body {
+				margin: 0;
+				background-color: var(--root-background) !important;
+				color: var(--root-color) !important;
+			}
+		</style>
+	</head>
+	<body>
+		<noscript>
+			<strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+		</noscript>
+		<div id="app"></div>
+		<!-- built files will be auto injected -->
+	</body>
 </html>

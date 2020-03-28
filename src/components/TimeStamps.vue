@@ -4,13 +4,13 @@
 			<TimeStampItem
 				v-for="timeStamp in timeStampList"
 				:key="timeStamp.index"
-				:class="{ active: currentTimeStamp === timeStamp }"
 				:item="timeStamp"
-				@click.native="select(timeStamp)"
 			/>
 
-			<div class="time-stamp add-one" @click="add()">
-				<div class="time-stamp-body">+</div>
+			<div class="time-stamp" @click="add()">
+				<div class="time-stamp-body add-one">
+					<span class="add-one-label layout">+</span>
+				</div>
 			</div>
 		</div>
 
@@ -38,9 +38,7 @@ const Mappers = Vue.extend({
 		...RootMapper.mapGetters(['currentTimeStamp']),
 	},
 	methods: {
-		...RootMapper.mapActions(['select']),
 		...RootMapper.mapMutations(['add', 'changeDescription']),
-		...RootMapper.mapMutations({ onlySelect: 'select' }),
 	},
 })
 
@@ -57,24 +55,33 @@ export default class TimeStampsComponent extends Mappers {}
 }
 
 .time-stamp {
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	align-items: center;
-	padding: 4px;
-	margin: 4px;
-	cursor: pointer;
-	user-select: none;
-	border-radius: 8px;
-	border: 1px solid lightblue;
-	box-sizing: border-box;
-	line-height: 1.5;
-	position: relative;
-
 	min-width: 110px;
-	width: 100%;
-	max-width: 31%;
+	max-width: 33.33%;
 	min-height: 110px;
+
+	&, &-body {
+		padding: 4px;
+		box-sizing: border-box;
+		width: 100%;
+	}
+
+	&-body {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		align-items: center;
+		position: relative;
+		padding: 4px;
+		cursor: pointer;
+		user-select: none;
+		border-radius: 8px;
+		line-height: 1.5;
+		height: 100%;
+
+		&.active {
+			background-color: var(--color-primary);
+		}
+	}
 
 	&-index {
 		font-size: 20px;
@@ -96,37 +103,35 @@ export default class TimeStampsComponent extends Mappers {}
 		font-size: 20px;
 	}
 
-	&.active {
-		background-color: lightblue;
-	}
+	.time-stamp-body {
+		&.add-one {
+			justify-content: center;
 
-	&.add-one {
-		border-color: transparent;
-		justify-content: center;
-
-		.time-stamp-body {
-			width: 40px;
-			height: 40px;
-			line-height: 40px;
-			border-radius: 100%;
-			text-align: center;
-			border: 1px solid lightblue;
+			.add-one-label {
+				width: 40px;
+				height: 40px;
+				line-height: 40px;
+				border-radius: 100%;
+				text-align: center;
+				justify-self: center;
+				align-self: center;
+			}
 		}
 	}
 }
 
 h3 {
-  margin: 40px 0 0;
+	margin: 40px 0 0;
 }
 ul {
-  list-style-type: none;
-  padding: 0;
+	list-style-type: none;
+	padding: 0;
 }
 li {
-  display: inline-block;
-  margin: 0 10px;
+	display: inline-block;
+	margin: 0 10px;
 }
 a {
-  color: #42b983;
+	color: var(--color-active);
 }
 </style>

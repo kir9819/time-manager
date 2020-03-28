@@ -1,6 +1,6 @@
 <template>
 	<div class="home">
-		<TimeStamps/>
+		<TimeStamps class="layout-container"/>
 	</div>
 </template>
 
