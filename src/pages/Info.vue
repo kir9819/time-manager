@@ -95,7 +95,7 @@ export default class InfoPage extends Mappers {}
 		}
 
 		&-body {
-			max-width: 200px;
+			max-width: 300px;
 			width: 100%;
 			border-radius: 12px;
 			padding: 8px 16px;
@@ -109,7 +109,7 @@ export default class InfoPage extends Mappers {}
 		margin-top: 16px;
 		padding: 12px;
 		border-radius: 12px;
-		max-width: 300px;
+		max-width: 350px;
 		width: 100%;
 	}
 }
