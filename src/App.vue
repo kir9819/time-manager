@@ -4,7 +4,7 @@
 
 		<nav id="nav" class="layout layout-container">
 			<router-link to="/">Home</router-link>
-			<router-link to="/list">List</router-link>
+			<!-- <router-link to="/list">List</router-link> -->
 			<router-link to="/info">Info</router-link>
 		</nav>
 	</div>
@@ -50,7 +50,14 @@ input {
 	background-color: var(--color-layout);
 	color: var(--root-color);
 	border: 1px solid;
+	border-radius: 8px;
 	padding: 4px 8px;
+
+	outline: none;
+
+	&:focus {
+		border-color: var(--color-active);
+	}
 }
 
 .layout {

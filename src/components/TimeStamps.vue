@@ -48,6 +48,8 @@ export default class TimeStampsComponent extends Mappers {}
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
 #time-stamps {
+	padding-bottom: 48px;
+
 	.hello {
 		display: flex;
 		flex-wrap: wrap;
@@ -59,7 +61,7 @@ export default class TimeStampsComponent extends Mappers {}
 		max-width: 33.33%;
 		min-height: 110px;
 
-		.change-description {
+		.context-menu {
 			width: 100vw;
 			height: 100vh;
 			position: fixed;
@@ -69,6 +71,7 @@ export default class TimeStampsComponent extends Mappers {}
 			justify-content: center;
 			align-items: flex-start;
 			z-index: 1000;
+			user-select: none;
 
 			&-body {
 				position: relative;
@@ -89,6 +92,22 @@ export default class TimeStampsComponent extends Mappers {}
 				z-index: 1;
 				opacity: 0.8;
 				background-color: black;
+			}
+
+			&-actions {
+				margin-top: 16px;
+				margin-left: -4px;
+				margin-right: -4px;
+
+				.action {
+					&-button {
+						padding: 4px 8px;
+						margin: 4px;
+						cursor: pointer;
+						border-radius: 8px;
+						border: 1px solid var(--root-color);
+					}
+				}
 			}
 		}
 
@@ -166,6 +185,7 @@ export default class TimeStampsComponent extends Mappers {}
 			border-radius: 12px;
 			max-width: 350px;
 			width: 100%;
+			box-shadow: 0 0 5px var(--root-background);
 		}
 	}
 }

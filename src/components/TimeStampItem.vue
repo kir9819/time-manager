@@ -7,29 +7,39 @@
 			@contextmenu.prevent="showInput"
 			@touchstart="start"
 			@touchend="end"
+			@touchmove="end"
 		>
-			<span class="time-stamp-index">{{ item.index }}</span>
+			<span class="time-stamp-index">{{ index }}</span>
 			<div class="time-stamp-description">{{ item.description }}</div>
 			<div class="time-stamp-time">{{ totalTime | totalTimeString }}</div>
 		</div>
 
 		<div
 			v-if="needShowInput"
-			class="change-description"
+			class="context-menu"
 		>
 			<div
-				class="change-description-layout"
+				class="context-menu-layout"
 				@click="needShowInput = false"
 				@contextmenu.prevent
 			/>
 
-			<div class="change-description-body layout" @click.stop>
-				<div class="change-description-label">Изменить описание</div>
+			<div class="context-menu-body layout" @click.stop>
+				<div class="context-menu-label">Изменить описание</div>
 				<input
 					ref="input"
 					:value="item.description"
-					@input="changeDescription({ description: $event.target.value, index: item.index })"
+					placeholder="описание"
+					@input="changeDescription({ description: $event.target.value, index: index })"
 				>
+				<div class="context-menu-actions">
+					<div class="action-button" @click="clearTimeStamps(index)">Очистить ячейку</div>
+					<div
+						v-if="index > DEFAULT_TIME_STAMPS_AMOUNT"
+						class="action-button"
+						@click="deleteTimeStamps(index)"
+					>Удалить</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -37,13 +47,13 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
-import { RootMapper } from 'Plugins/store/modules/root'
+import { RootMapper, DEFAULT_TIME_STAMPS_AMOUNT } from 'Plugins/store/modules/root'
 import { TimeStamps } from 'Utils/ts/TimeStamps' // eslint-disable-line
 import { totalTimeString } from 'Utils/index'
 
 const Mappers = Vue.extend({
 	methods: {
-		...RootMapper.mapActions(['select', 'changeDescription']),
+		...RootMapper.mapActions(['select', 'changeDescription', 'clearTimeStamps', 'deleteTimeStamps']),
 	},
 })
 
@@ -57,6 +67,8 @@ export default class TimeStampItem extends Mappers {
 	timer: number = 0
 
 	needShowInput: boolean = false
+
+	DEFAULT_TIME_STAMPS_AMOUNT: number = DEFAULT_TIME_STAMPS_AMOUNT
 
 	@Prop(Object) private item!: TimeStamps
 
@@ -74,6 +86,10 @@ export default class TimeStampItem extends Mappers {
 
 	get isRunning(): boolean {
 		return !!this.item.timer
+	}
+
+	get index(): number {
+		return this.item.index
 	}
 
 	start(): void {

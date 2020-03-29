@@ -6,7 +6,7 @@ import { TimeStamp } from 'Utils/ts/TimeStamp'
 import DB from 'Plugins/db'
 import InfoStore from './info'
 
-const DEFAULT_TIME_STAMPS_AMOUNT: number = 9
+export const DEFAULT_TIME_STAMPS_AMOUNT: number = 9
 
 class RootState {
 	timeStampList: Array<TimeStamps> = []
@@ -39,7 +39,7 @@ class RootGetters extends Getters<RootState> {
 }
 
 class RootMutations extends Mutations<RootState> {
-	createStore(timeStamps: Array<TimeStamps>) {
+	createStore(timeStamps: Array<TimeStamps>): void {
 		this.state.timeStampList = timeStamps
 		RootState.INDEX = timeStamps.length
 	}
@@ -63,7 +63,7 @@ class RootMutations extends Mutations<RootState> {
 		if (timeStampByIndex) timeStampByIndex.timer = payload.timer
 	}
 
-	addTimeStamp(payload: { description: string, index: number }) {
+	addTimeStamp(payload: { description: string, index: number }): void {
 		const timeStamp = new TimeStamp(payload.description, payload.index)
 		const timeStampByIndex = this.state.timeStampList.find(ts => ts.index === payload.index)
 
@@ -75,7 +75,7 @@ class RootMutations extends Mutations<RootState> {
 		}
 	}
 
-	stopTimeStamp(index: number) {
+	stopTimeStamp(index: number): void {
 		const timeStampByIndex = this.state.timeStampList.find(ts => ts.index === index)
 
 		if (timeStampByIndex) {
@@ -87,7 +87,7 @@ class RootMutations extends Mutations<RootState> {
 		}
 	}
 
-	clearInterval(index: number) {
+	clearInterval(index: number): void {
 		const timeStampByIndex = this.state.timeStampList.find(ts => ts.index === index)
 
 		if (timeStampByIndex) {
@@ -108,6 +108,14 @@ class RootMutations extends Mutations<RootState> {
 			timeStampByIndex.totalms = 0
 			timeStampByIndex.description = ''
 			timeStampByIndex.currentTimeStamp = timeStampByIndex.timeStamps[0] // eslint-disable-line
+		}
+	}
+
+	deleteTimeStamps(index: number): void {
+		const itemIndexInList = this.state.timeStampList.findIndex(ts => ts.index === index)
+
+		if (itemIndexInList !== -1) {
+			this.state.timeStampList.splice(itemIndexInList, 1)
 		}
 	}
 }
@@ -206,6 +214,12 @@ class RootActions extends Actions<RootState, RootGetters, RootMutations, RootAct
 		const { description, index } = payload
 
 		this.commit('changeDescription', { description, index: index || this.state.currrentTimeStampIndex })
+		this.commit('saveDataInDB')
+	}
+
+	async deleteTimeStamps(index: number): Promise<void> {
+		await this.dispatch('clearTimeStamps', index)
+		this.commit('deleteTimeStamps', index)
 		this.commit('saveDataInDB')
 	}
 }
