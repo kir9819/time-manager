@@ -4,6 +4,8 @@ import { TimeStamp } from './TimeStamp'
 class TimeStamps {
 	id: string
 
+	date: string
+
 	description: string
 
 	index: number
@@ -17,7 +19,8 @@ class TimeStamps {
 	totalms: number = 0
 
 	constructor(description: string, index: number) {
-		this.id = `${getDate()}_${index}`
+		this.date = getDate()
+		this.id = `${this.date}_${index}`
 		this.timeStamps = []
 		this.currentTimeStamp = this.timeStamps[0] // eslint-disable-line prefer-destructuring
 
