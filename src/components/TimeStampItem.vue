@@ -4,10 +4,33 @@
 			class="time-stamp-body layout"
 			:class="{ active: isRunning }"
 			@click="select(item)"
+			@contextmenu.prevent="showInput"
+			@touchstart="start"
+			@touchend="end"
 		>
 			<span class="time-stamp-index">{{ item.index }}</span>
 			<div class="time-stamp-description">{{ item.description }}</div>
 			<div class="time-stamp-time">{{ totalTime | totalTimeString }}</div>
+		</div>
+
+		<div
+			v-if="needShowInput"
+			class="change-description"
+		>
+			<div
+				class="change-description-layout"
+				@click="needShowInput = false"
+				@contextmenu.prevent
+			/>
+
+			<div class="change-description-body layout" @click.stop>
+				<div class="change-description-label">Изменить описание</div>
+				<input
+					ref="input"
+					:value="item.description"
+					@input="changeDescription({ description: $event.target.value, index: item.index })"
+				>
+			</div>
 		</div>
 	</div>
 </template>
@@ -20,7 +43,7 @@ import { totalTimeString } from 'Utils/index'
 
 const Mappers = Vue.extend({
 	methods: {
-		...RootMapper.mapActions(['select']),
+		...RootMapper.mapActions(['select', 'changeDescription']),
 	},
 })
 
@@ -31,6 +54,10 @@ const Mappers = Vue.extend({
 	},
 })
 export default class TimeStampItem extends Mappers {
+	timer: number = 0
+
+	needShowInput: boolean = false
+
 	@Prop(Object) private item!: TimeStamps
 
 	get currentTimeStampTime(): number {
@@ -47,6 +74,24 @@ export default class TimeStampItem extends Mappers {
 
 	get isRunning(): boolean {
 		return !!this.item.timer
+	}
+
+	start(): void {
+		this.timer = setTimeout(() => {
+			window.navigator.vibrate(10)
+			clearTimeout(this.timer)
+
+			this.showInput()
+		}, 600)
+	}
+
+	end(): void {
+		clearTimeout(this.timer)
+	}
+
+	showInput() {
+		this.needShowInput = true
+		this.$nextTick(() => (this.$refs.input as HTMLInputElement).focus())
 	}
 }
 </script>

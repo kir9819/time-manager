@@ -59,6 +59,39 @@ export default class TimeStampsComponent extends Mappers {}
 		max-width: 33.33%;
 		min-height: 110px;
 
+		.change-description {
+			width: 100vw;
+			height: 100vh;
+			position: fixed;
+			top: 0;
+			left: 0;
+			display: flex;
+			justify-content: center;
+			align-items: flex-start;
+			z-index: 1000;
+
+			&-body {
+				position: relative;
+				z-index: 2;
+				padding: 24px;
+				margin-top: 125px;
+				border-radius: 12px;
+			}
+
+			&-label {
+				margin-bottom: 12px;
+			}
+
+			&-layout {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				z-index: 1;
+				opacity: 0.8;
+				background-color: black;
+			}
+		}
+
 		&, &-body {
 			padding: 4px;
 			box-sizing: border-box;

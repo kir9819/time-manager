@@ -41,6 +41,7 @@ class RootGetters extends Getters<RootState> {
 class RootMutations extends Mutations<RootState> {
 	createStore(timeStamps: Array<TimeStamps>) {
 		this.state.timeStampList = timeStamps
+		RootState.INDEX = timeStamps.length
 	}
 
 	add(description: string = ''): void {
