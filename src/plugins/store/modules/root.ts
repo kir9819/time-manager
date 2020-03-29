@@ -24,6 +24,18 @@ class RootGetters extends Getters<RootState> {
 	get currentTimeStamp(): TimeStamps | void {
 		return this.getters.getTimeStampByIndex(this.state.currrentTimeStampIndex)
 	}
+
+	get totalTime(): number {
+		return this.state.timeStampList.reduce((total, ts) => {
+			let currentTimeStampTime = 0
+
+			if (ts.currentTimeStamp) {
+				currentTimeStampTime = ts.currentTimeStamp.end.getTime() - ts.currentTimeStamp.start.getTime()
+			}
+
+			return total + ts.totalms + currentTimeStampTime
+		}, 0) / 1000
+	}
 }
 
 class RootMutations extends Mutations<RootState> {

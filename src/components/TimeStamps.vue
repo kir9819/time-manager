@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div id="time-stamps">
 		<div class="hello">
 			<TimeStampItem
 				v-for="timeStamp in timeStampList"
@@ -14,15 +14,8 @@
 			</div>
 		</div>
 
-		<div v-if="currentTimeStamp" style="margin-top: 40px; text-align: left; line-height: 1.5;">
-			<div>Текущий: {{ currentTimeStamp.index }}</div>
-			<div>
-				<span>Описание: </span>
-				<input :value="currentTimeStamp.description" @change="changeDescription({ description: $event.target.value })">
-			</div>
-			<div>
-				<span>Время: </span>
-			</div>
+		<div class="total-time-layout layout-container">
+			<div class="total-time-body layout">Общее время: {{ totalTime | totalTimeString }}</div>
 		</div>
 	</div>
 </template>
@@ -30,12 +23,13 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { RootMapper } from 'Plugins/store/modules/root'
+import { totalTimeString } from 'Utils/index'
 import TimeStampItem from './TimeStampItem.vue'
 
 const Mappers = Vue.extend({
 	computed: {
 		...RootMapper.mapState(['timeStampList']),
-		...RootMapper.mapGetters(['currentTimeStamp']),
+		...RootMapper.mapGetters(['currentTimeStamp', 'totalTime']),
 	},
 	methods: {
 		...RootMapper.mapMutations(['add']),
@@ -43,96 +37,103 @@ const Mappers = Vue.extend({
 	},
 })
 
-@Component({ name: 'TimeStamps', components: { TimeStampItem } })
+@Component({
+	name: 'TimeStamps',
+	components: { TimeStampItem },
+	filters: { totalTimeString },
+})
 export default class TimeStampsComponent extends Mappers {}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
-.hello {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-}
-
-.time-stamp {
-	min-width: 110px;
-	max-width: 33.33%;
-	min-height: 110px;
-
-	&, &-body {
-		padding: 4px;
-		box-sizing: border-box;
-		width: 100%;
-	}
-
-	&-body {
+#time-stamps {
+	.hello {
 		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
-		align-items: center;
-		position: relative;
-		padding: 4px;
-		cursor: pointer;
-		user-select: none;
-		border-radius: 8px;
-		line-height: 1.5;
-		height: 100%;
+		flex-wrap: wrap;
+		justify-content: center;
+	}
 
-		&.active {
-			background-color: var(--color-primary);
+	.time-stamp {
+		min-width: 110px;
+		max-width: 33.33%;
+		min-height: 110px;
+
+		&, &-body {
+			padding: 4px;
+			box-sizing: border-box;
+			width: 100%;
 		}
-	}
 
-	&-index {
-		font-size: 20px;
-	}
+		&-body {
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			align-items: center;
+			position: relative;
+			padding: 4px;
+			cursor: pointer;
+			user-select: none;
+			border-radius: 8px;
+			line-height: 1.5;
+			height: 100%;
+			border: 1px solid transparent;
 
-	&-description {
-		font-size: 12px;
-		margin-top: 4px;
-	}
+			&.active {
+				background-color: var(--color-primary);
+			}
 
-	&-time {
-		margin-top: 8px;
-	}
+			&.exist {
+				border-color: var(--color-active);
+			}
+		}
 
-	&-status {
-		position: absolute;
-		top: 4px;
-		right: 4px;
-		font-size: 20px;
-	}
+		&-index {
+			font-size: 20px;
+		}
 
-	.time-stamp-body {
-		&.add-one {
-			justify-content: center;
+		&-description {
+			font-size: 12px;
+			margin-top: 4px;
+		}
 
-			.add-one-label {
-				width: 40px;
-				height: 40px;
-				line-height: 40px;
-				border-radius: 100%;
-				text-align: center;
-				justify-self: center;
-				align-self: center;
+		&-time {
+			margin-top: 8px;
+		}
+
+		.time-stamp-body {
+			&.add-one {
+				justify-content: center;
+
+				.add-one-label {
+					width: 40px;
+					height: 40px;
+					line-height: 40px;
+					border-radius: 100%;
+					text-align: center;
+					justify-self: center;
+					align-self: center;
+				}
 			}
 		}
 	}
-}
 
-h3 {
-	margin: 40px 0 0;
-}
-ul {
-	list-style-type: none;
-	padding: 0;
-}
-li {
-	display: inline-block;
-	margin: 0 10px;
-}
-a {
-	color: var(--color-active);
+	.total-time {
+		&-layout {
+			width: 100%;
+			display: flex;
+			justify-content: center;
+			position: fixed;
+			bottom: 72px;
+			left: 0;
+		}
+
+		&-body {
+			padding: 12px;
+			border-radius: 12px;
+			max-width: 350px;
+			width: 100%;
+		}
+	}
 }
 </style>
