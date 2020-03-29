@@ -39,13 +39,7 @@ class RootMutations extends Mutations<RootState> {
 		this.state.currrentTimeStampIndex = index
 	}
 
-	changeDescription(payload: { description: string, index?: number }): void {
-		if (!payload.index) {
-			const currrentTimeStamp = this.state.timeStampList.find(ts => ts.index === this.state.currrentTimeStampIndex)
-			if (currrentTimeStamp) currrentTimeStamp.description = payload.description
-			return
-		}
-
+	changeDescription(payload: { description: string, index: number }): void {
 		const timeStampByIndex = this.state.timeStampList.find(ts => ts.index === payload.index)
 
 		if (timeStampByIndex) timeStampByIndex.description = payload.description
@@ -192,6 +186,13 @@ class RootActions extends Actions<RootState, RootGetters, RootMutations, RootAct
 			this.commit('clearTimeStamps', ts.index)
 		})
 
+		this.commit('saveDataInDB')
+	}
+
+	changeDescription(payload: { description: string, index?: number }): void {
+		const { description, index } = payload
+
+		this.commit('changeDescription', { description, index: index || this.state.currrentTimeStampIndex })
 		this.commit('saveDataInDB')
 	}
 }

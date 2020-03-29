@@ -38,7 +38,8 @@ const Mappers = Vue.extend({
 		...RootMapper.mapGetters(['currentTimeStamp']),
 	},
 	methods: {
-		...RootMapper.mapMutations(['add', 'changeDescription']),
+		...RootMapper.mapMutations(['add']),
+		...RootMapper.mapActions(['changeDescription']),
 	},
 })
 

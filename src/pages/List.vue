@@ -28,8 +28,7 @@ const Mappers = Vue.extend({
 		...RootMapper.mapGetters(['currentTimeStamp']),
 	},
 	methods: {
-		...RootMapper.mapMutations(['changeDescription']),
-		...RootMapper.mapActions(['clearTimeStamps', 'clearAllTimeStamps']),
+		...RootMapper.mapActions(['clearTimeStamps', 'clearAllTimeStamps', 'changeDescription']),
 	},
 })
 
