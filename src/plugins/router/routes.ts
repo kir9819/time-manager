@@ -9,4 +9,9 @@ export default [
 		name: 'List',
 		component: () => import('Pages/List.vue'),
 	},
+	{
+		path: '/info',
+		name: 'Info',
+		component: () => import('Pages/Info.vue'),
+	},
 ]

@@ -4,6 +4,7 @@ import { Getters, Mutations, Actions, Module, createMapper } from 'vuex-smart-mo
 import { TimeStamps, createTimeStamps } from 'Utils/ts/TimeStamps'
 import { TimeStamp } from 'Utils/ts/TimeStamp'
 import DB from 'Plugins/db'
+import InfoStore from './info'
 
 const DEFAULT_TIME_STAMPS_AMOUNT: number = 9
 
@@ -200,6 +201,9 @@ const module = new Module({
 	getters: RootGetters,
 	mutations: RootMutations,
 	actions: RootActions,
+	modules: {
+		InfoStore,
+	},
 })
 
 export default module

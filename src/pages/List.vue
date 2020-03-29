@@ -19,7 +19,6 @@
 </template>
 
 <script lang="ts">
-
 import { Component, Vue } from 'vue-property-decorator'
 import { RootMapper } from 'Plugins/store/modules/root'
 

@@ -7,7 +7,7 @@
 		>
 			<span class="time-stamp-index">{{ item.index }}</span>
 			<div class="time-stamp-description">{{ item.description }}</div>
-			<div class="time-stamp-time">{{ totalTimeString }}</div>
+			<div class="time-stamp-time">{{ totalTime | totalTimeString }}</div>
 			<div class="time-stamp-status">{{ isRunning ? '⏸️' : '▶️' }}</div>
 		</div>
 	</div>
@@ -17,6 +17,7 @@
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { RootMapper } from 'Plugins/store/modules/root'
 import { TimeStamps } from 'Utils/ts/TimeStamps' // eslint-disable-line
+import { totalTimeString } from 'Utils/index'
 
 const Mappers = Vue.extend({
 	computed: {
@@ -27,7 +28,12 @@ const Mappers = Vue.extend({
 	},
 })
 
-@Component
+@Component({
+	name: 'TimeStampItem',
+	filters: {
+		totalTimeString,
+	},
+})
 export default class TimeStampItem extends Mappers {
 	@Prop(Object) private item!: TimeStamps
 
@@ -41,28 +47,6 @@ export default class TimeStampItem extends Mappers {
 
 	get totalTime(): number {
 		return (this.item.totalms + this.currentTimeStampTime) / 1000
-	}
-
-	get totalTimeString(): string {
-		let { totalTime } = this
-
-		const days = Math.floor(totalTime / 86400)
-		totalTime -= days * 86400
-
-		const hours = Math.floor(totalTime / 3600)
-		totalTime -= hours * 3600
-
-		const min = Math.floor(totalTime / 60)
-		totalTime -= min * 60
-
-		const sec = Math.floor(totalTime)
-
-		const daysString = days ? `${days} д. ` : ''
-		const hoursString = `${hours.toString().padStart(2, '0')}`
-		const minString = `:${min.toString().padStart(2, '0')}`
-		const secString = `:${sec.toString().padStart(2, '0')}`
-
-		return daysString + hoursString + minString + secString
 	}
 
 	get isRunning(): boolean {
