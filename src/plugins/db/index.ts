@@ -60,6 +60,9 @@ const dbRequest = openDB<TimeStampsDB>('timeStamps', DB_VERSION, {
 				db.deleteObjectStore('days')
 				db.createObjectStore('days', { keyPath: 'date' })
 			}
+
+			const timeStampsNewObject = db.createObjectStore('timeStamps', { keyPath: 'id' })
+			timeStampsNewObject.createIndex('date', 'date')
 		}
 		}
 	},
