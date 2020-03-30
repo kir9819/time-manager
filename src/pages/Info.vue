@@ -7,7 +7,7 @@
 				class="date-body layout"
 				:class="{ active: date === currentDate }"
 				@click="changeDate(date)"
-			>{{ date }}</div>
+			>{{ date | dateLocale }}</div>
 		</div>
 
 		<div class="time-stamps-layout">
@@ -55,9 +55,11 @@ const Mappers = Vue.extend({
 
 			return totalTimeString((timeStamps.totalms + currentTimeStampTime) / 1000)
 		},
-		/* dateLocale(date: string): string {
-			// const
-		}, */
+		dateLocale(date: string): string {
+			const dateObj = new Date(date)
+
+			return dateObj.toLocaleDateString()
+		},
 	},
 })
 export default class InfoPage extends Mappers {}
