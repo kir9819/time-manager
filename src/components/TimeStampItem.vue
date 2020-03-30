@@ -98,7 +98,7 @@ export default class TimeStampItem extends Mappers {
 			clearTimeout(this.timer)
 
 			this.showInput()
-		}, 600)
+		}, 500)
 	}
 
 	end(): void {
