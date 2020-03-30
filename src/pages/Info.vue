@@ -22,7 +22,9 @@
 			</div>
 		</div>
 
-		<div class="total-time layout">Общее время: {{ totalTimeLocal | totalTimeString }}</div>
+		<div class="total-time-layout layout-container">
+			<div class="total-time-body layout">Общее время: {{ totalTimeLocal | totalTimeString }}</div>
+		</div>
 	</div>
 </template>
 
@@ -82,6 +84,7 @@ export default class InfoPage extends Mappers {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	padding-bottom: 72px;
 
 	.dates-layout {
 		display: flex;
@@ -121,14 +124,6 @@ export default class InfoPage extends Mappers {
 			line-height: 1.5;
 			text-align: left;
 		}
-	}
-
-	.total-time {
-		margin-top: 16px;
-		padding: 12px;
-		border-radius: 12px;
-		max-width: 350px;
-		width: 100%;
 	}
 }
 </style>

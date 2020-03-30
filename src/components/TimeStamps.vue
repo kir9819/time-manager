@@ -48,7 +48,7 @@ export default class TimeStampsComponent extends Mappers {}
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
 #time-stamps {
-	padding-bottom: 48px;
+	padding-bottom: 72px;
 
 	.hello {
 		display: flex;
@@ -167,25 +167,6 @@ export default class TimeStampsComponent extends Mappers {}
 					align-self: center;
 				}
 			}
-		}
-	}
-
-	.total-time {
-		&-layout {
-			width: 100%;
-			display: flex;
-			justify-content: center;
-			position: fixed;
-			bottom: 72px;
-			left: 0;
-		}
-
-		&-body {
-			padding: 12px;
-			border-radius: 12px;
-			max-width: 350px;
-			width: 100%;
-			box-shadow: 0 0 5px var(--root-background);
 		}
 	}
 }
