@@ -55,6 +55,9 @@ const Mappers = Vue.extend({
 
 			return totalTimeString((timeStamps.totalms + currentTimeStampTime) / 1000)
 		},
+		/* dateLocale(date: string): string {
+			// const
+		}, */
 	},
 })
 export default class InfoPage extends Mappers {}
@@ -68,6 +71,7 @@ export default class InfoPage extends Mappers {}
 
 	.dates-layout {
 		display: flex;
+		justify-content: center;
 		flex-wrap: wrap;
 
 		.date {
