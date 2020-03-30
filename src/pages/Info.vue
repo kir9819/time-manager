@@ -12,7 +12,7 @@
 
 		<div class="time-stamps-layout">
 			<div
-				v-for="timeStamps in existingTimeStampsList"
+				v-for="timeStamps in existingTimeStampsListLocal"
 				:key="timeStamps.id"
 				class="time-stamps-body layout"
 			>
@@ -22,25 +22,29 @@
 			</div>
 		</div>
 
-		<div class="total-time layout">Общее время: {{ totalTime | totalTimeString }}</div>
+		<div class="total-time layout">Общее время: {{ totalTimeLocal | totalTimeString }}</div>
 	</div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { RootMapper } from 'Plugins/store/modules/info'
+import { RootMapper as RootModuleMapper } from 'Plugins/store/modules/root'
 import { totalTimeString } from 'Utils/index'
 import { TimeStamps } from 'Utils/ts/TimeStamps' // eslint-disable-line
 
 const Mappers = Vue.extend({
 	computed: {
-		...RootMapper.mapState(['dateList', 'currentDate']),
+		...RootMapper.mapState(['dateList', 'currentDate', 'usingRoot']),
 		...RootMapper.mapGetters(['totalTime', 'existingTimeStampsList']),
+		...RootModuleMapper.mapState(['timeStampList']),
+		...RootModuleMapper.mapGetters({ totalTimeRoot: 'totalTime' }),
 	},
 	methods: {
 		...RootMapper.mapActions(['changeDate']),
 	},
 })
+
 
 @Component({
 	name: 'InfoPage',
@@ -62,7 +66,15 @@ const Mappers = Vue.extend({
 		},
 	},
 })
-export default class InfoPage extends Mappers {}
+export default class InfoPage extends Mappers {
+	get existingTimeStampsListLocal(): Array<TimeStamps> {
+		return this.usingRoot ? this.timeStampList.filter(ts => ts.totalms || ts.currentTimeStamp) : this.existingTimeStampsList
+	}
+
+	get totalTimeLocal(): number {
+		return this.usingRoot ? this.totalTimeRoot : this.totalTime
+	}
+}
 </script>
 
 <style lang="scss">

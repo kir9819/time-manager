@@ -3,6 +3,7 @@
 import { Getters, Mutations, Actions, Module, createMapper } from 'vuex-smart-module'
 import { TimeStamps } from 'Utils/ts/TimeStamps'
 import DB from 'Plugins/db'
+import { getDate } from 'Utils/index'
 
 class RootState {
 	dateList: Array<string> = []
@@ -10,6 +11,8 @@ class RootState {
 	currentDate: string = ''
 
 	timeStampsList: Array<TimeStamps> = []
+
+	usingRoot: boolean = false
 }
 
 class RootGetters extends Getters<RootState> {
@@ -29,17 +32,22 @@ class RootGetters extends Getters<RootState> {
 class RootMutations extends Mutations<RootState> {
 	createStore(dateList: Array<string>) {
 		this.state.dateList = dateList
+
+		if (!dateList.includes(getDate())) this.state.dateList.push(getDate())
 	}
 
 	setCurrentDate(date?: string) {
-		if (!date) {
-			const lastItemIndex = this.state.dateList.length > 0 ? this.state.dateList.length - 1 : 0
-			this.state.currentDate = this.state.dateList[lastItemIndex]
+		if (!date || date === getDate()) {
+			this.state.currentDate = getDate()
 		} else this.state.currentDate = date
 	}
 
 	setTimeStamps(timeStampsList: Array<TimeStamps>) {
 		this.state.timeStampsList = timeStampsList
+	}
+
+	setUsingRoot(usingRoot: boolean) {
+		this.state.usingRoot = usingRoot
 	}
 }
 
@@ -53,8 +61,15 @@ class RootActions extends Actions<RootState, RootGetters, RootMutations, RootAct
 
 	async changeDate(date?: string): Promise<void> {
 		if (date === this.state.currentDate) return
+
 		this.commit('setCurrentDate', date)
-		this.commit('setTimeStamps', await DB.getTimeStampsByDate(this.state.currentDate))
+
+		if (!date || date === getDate()) {
+			this.commit('setUsingRoot', true)
+		} else {
+			this.commit('setUsingRoot', false)
+			this.commit('setTimeStamps', await DB.getTimeStampsByDate(this.state.currentDate))
+		}
 	}
 }
 
