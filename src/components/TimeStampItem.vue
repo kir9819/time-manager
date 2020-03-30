@@ -30,7 +30,7 @@
 					ref="input"
 					:value="item.description"
 					placeholder="описание"
-					@input="changeDescription({ description: $event.target.value, index: index })"
+					@change="changeDescription({ description: $event.target.value, index: index })"
 				>
 				<div class="context-menu-actions">
 					<div class="action-button" @click="clearTimeStamps(index)">Очистить ячейку</div>
