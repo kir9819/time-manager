@@ -15,12 +15,12 @@
 		</div>
 
 		<div
-			v-if="needShowInput"
+			v-if="isContextMenuVisible"
 			class="context-menu"
 		>
 			<div
 				class="context-menu-layout"
-				@click="needShowInput = false"
+				@click="isContextMenuVisible = false"
 				@contextmenu.prevent
 			/>
 
@@ -33,6 +33,7 @@
 					@change="changeDescription({ description: $event.target.value, index: index })"
 				>
 				<div class="context-menu-actions">
+					<div class="action-button" @click="isContextMenuVisible = false">Сохранить</div>
 					<div class="action-button" @click="clearTimeStamps(index)">Очистить ячейку</div>
 					<div
 						v-if="index > DEFAULT_TIME_STAMPS_AMOUNT"
@@ -66,7 +67,7 @@ const Mappers = Vue.extend({
 export default class TimeStampItem extends Mappers {
 	timer: number = 0
 
-	needShowInput: boolean = false
+	isContextMenuVisible: boolean = false
 
 	DEFAULT_TIME_STAMPS_AMOUNT: number = DEFAULT_TIME_STAMPS_AMOUNT
 
@@ -106,7 +107,7 @@ export default class TimeStampItem extends Mappers {
 	}
 
 	showInput() {
-		this.needShowInput = true
+		this.isContextMenuVisible = true
 		this.$nextTick(() => (this.$refs.input as HTMLInputElement).focus())
 	}
 }
