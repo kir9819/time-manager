@@ -1,7 +1,7 @@
 function getDate(fullDate: Date = new Date()): string {
-	const year = fullDate.getUTCFullYear()
-	const month = (fullDate.getUTCMonth() + 1).toString().padStart(2, '0')
-	const date = fullDate.getUTCDate().toString().padStart(2, '0')
+	const year = fullDate.getFullYear()
+	const month = (fullDate.getMonth() + 1).toString().padStart(2, '0')
+	const date = fullDate.getDate().toString().padStart(2, '0')
 
 	return `${year}-${month}-${date}`
 }
