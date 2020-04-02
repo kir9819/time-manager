@@ -143,7 +143,20 @@ class DB {
 		const request = await dbRequest
 		const dates = await request.getAll('days')
 
-		return dates.map(date => date.date)
+		const existingDates = []
+
+		for (let i = 0; i < dates.length - 1; i += 1) {
+			for (let k = 0; k < dates[i].timeStamps.length - 1; k += 1) {
+				const timeStamps = await request.get('timeStamps', dates[i].timeStamps[k]) // eslint-disable-line
+
+				if (timeStamps && (timeStamps.totalms || timeStamps.currentTimeStamp || timeStamps.description)) {
+					existingDates.push(dates[i].date)
+					break
+				}
+			}
+		}
+
+		return existingDates
 	}
 
 	static async getTimeStampsByDate(date: string): Promise<Array<TimeStamps>> {

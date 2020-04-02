@@ -7,7 +7,7 @@
 				:ref="date"
 				class="date-body layout"
 				:class="{ active: date === currentDate }"
-				@click="changeDateLocal(date)"
+				@click="changeDate(date)"
 			>{{ date | dateLocale }}</div>
 		</div>
 
@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Watch } from 'vue-property-decorator'
 import { RootMapper } from 'Plugins/store/modules/info'
 import { RootMapper as RootModuleMapper } from 'Plugins/store/modules/root'
 import { totalTimeString } from 'Utils/index'
@@ -72,33 +72,27 @@ const Mappers = Vue.extend({
 })
 export default class InfoPage extends Mappers {
 	get existingTimeStampsListLocal(): Array<TimeStamps> {
-		return this.usingRoot ? this.timeStampList.filter(ts => ts.totalms || ts.currentTimeStamp) : this.existingTimeStampsList
+		return this.usingRoot ? this.timeStampList.filter(ts => ts.totalms || ts.currentTimeStamp || ts.description) : this.existingTimeStampsList
 	}
 
 	get totalTimeLocal(): number {
 		return this.usingRoot ? this.totalTimeRoot : this.totalTime
 	}
 
-	mounted() {
-		this.scrollDates(this.currentDate, 1)
-	}
+	@Watch('currentDate')
+	scrollDates(date: string) {
+		this.$nextTick(() => {
+			const dateRef = this.$refs[date] as Array<HTMLDivElement>
+			const datesRef = this.$refs.dates as HTMLDivElement
 
-	changeDateLocal(date: string) {
-		this.changeDate(date)
-		this.scrollDates(date)
-	}
+			if (datesRef.scrollLeft > (dateRef[0].offsetLeft + dateRef[0].offsetWidth)) return
 
-	scrollDates(date: string, duration?: number) {
-		const dateRef = this.$refs[date] as Array<HTMLDivElement>
-		const datesRef = this.$refs.dates as HTMLDivElement
-
-		if (datesRef.scrollLeft > (dateRef[0].offsetLeft + dateRef[0].offsetWidth)) return
-
-		ScrollTo.scrollTo(dateRef[0], duration || 500, {
-			container: datesRef,
-			offset: -(window.innerWidth / 2 - dateRef[0].offsetWidth / 2),
-			x: true,
-			y: false,
+			ScrollTo.scrollTo(dateRef[0], 500, {
+				container: datesRef,
+				offset: -(window.innerWidth / 2 - dateRef[0].offsetWidth / 2),
+				x: true,
+				y: false,
+			})
 		})
 	}
 }

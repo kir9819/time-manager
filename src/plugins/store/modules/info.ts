@@ -17,12 +17,16 @@ class RootState {
 
 class RootGetters extends Getters<RootState> {
 	get existingTimeStampsList(): Array<TimeStamps> {
-		return this.state.timeStampsList.filter(ts => ts.totalms || ts.currentTimeStamp)
+		return this.state.timeStampsList.filter(ts => ts.totalms || ts.currentTimeStamp || ts.description)
 	}
 
 	get totalTime(): number {
 		return this.getters.existingTimeStampsList.reduce((total, ts) => {
-			const currentTimeStampTime = ts.currentTimeStamp.end.getTime() - ts.currentTimeStamp.start.getTime()
+			let currentTimeStampTime = 0
+
+			if (ts.currentTimeStamp) {
+				currentTimeStampTime = ts.currentTimeStamp.end.getTime() - ts.currentTimeStamp.start.getTime()
+			}
 
 			return total + ts.totalms + currentTimeStampTime
 		}, 0) / 1000
