@@ -22,6 +22,7 @@
 	text-align: center;
 	padding-bottom: 72px;
 	padding-top: 24px;
+	user-select: none;
 }
 
 #nav {
@@ -86,5 +87,9 @@ input {
 		width: 100%;
 		box-shadow: 0 0 5px var(--root-background);
 	}
+}
+
+.selectable {
+	user-select: auto;
 }
 </style>

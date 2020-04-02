@@ -1,16 +1,17 @@
 <template>
-	<div id="page-info" class="layout-container">
-		<div class="dates-layout">
+	<div id="page-info">
+		<div ref="dates" class="dates-layout">
 			<div
 				v-for="date in dateList"
 				:key="date"
+				:ref="date"
 				class="date-body layout"
 				:class="{ active: date === currentDate }"
-				@click="changeDate(date)"
+				@click="changeDateLocal(date)"
 			>{{ date | dateLocale }}</div>
 		</div>
 
-		<div class="time-stamps-layout">
+		<div class="time-stamps-layout layout-container">
 			<div
 				v-for="timeStamps in existingTimeStampsListLocal"
 				:key="timeStamps.id"
@@ -34,6 +35,7 @@ import { RootMapper } from 'Plugins/store/modules/info'
 import { RootMapper as RootModuleMapper } from 'Plugins/store/modules/root'
 import { totalTimeString } from 'Utils/index'
 import { TimeStamps } from 'Utils/ts/TimeStamps' // eslint-disable-line
+import ScrollTo from 'vue-scrollto'
 
 const Mappers = Vue.extend({
 	computed: {
@@ -76,6 +78,29 @@ export default class InfoPage extends Mappers {
 	get totalTimeLocal(): number {
 		return this.usingRoot ? this.totalTimeRoot : this.totalTime
 	}
+
+	mounted() {
+		this.scrollDates(this.currentDate, 1)
+	}
+
+	changeDateLocal(date: string) {
+		this.changeDate(date)
+		this.scrollDates(date)
+	}
+
+	scrollDates(date: string, duration?: number) {
+		const dateRef = this.$refs[date] as Array<HTMLDivElement>
+		const datesRef = this.$refs.dates as HTMLDivElement
+
+		if (datesRef.scrollLeft > (dateRef[0].offsetLeft + dateRef[0].offsetWidth)) return
+
+		ScrollTo.scrollTo(dateRef[0], duration || 500, {
+			container: datesRef,
+			offset: -(window.innerWidth / 2 - dateRef[0].offsetWidth / 2),
+			x: true,
+			y: false,
+		})
+	}
 }
 </script>
 
@@ -84,20 +109,26 @@ export default class InfoPage extends Mappers {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	padding-bottom: 72px;
+	max-height: calc(100vh - 96px);
 
 	.dates-layout {
-		display: flex;
-		justify-content: center;
-		flex-wrap: wrap;
+		justify-self: center;
+		flex-shrink: 0;
+		width: 100%;
+		overflow-x: auto;
+		white-space: nowrap;
+		padding: 8px 12px;
+		padding-top: 0;
 
 		.date {
 			&-body {
-				margin: 4px;
+				margin: 0 4px;
 				padding: 8px 12px;
 				cursor: pointer;
+				user-select: none;
 				border-radius: 8px;
 				font-size: 14px;
+				display: inline-block;
 
 				&.active {
 					background-color: var(--color-primary);
@@ -112,7 +143,10 @@ export default class InfoPage extends Mappers {
 			flex-direction: column;
 			align-items: center;
 			width: 100%;
-			margin-top: 16px;
+			margin-top: 8px;
+			padding-top: 8px;
+			padding-bottom: 72px;
+			overflow-y: auto;
 		}
 
 		&-body {
