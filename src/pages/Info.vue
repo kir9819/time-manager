@@ -79,15 +79,15 @@ export default class InfoPage extends Mappers {
 		return this.usingRoot ? this.totalTimeRoot : this.totalTime
 	}
 
-	@Watch('currentDate')
-	scrollDates(date: string) {
+	@Watch('currentDate', { immediate: true })
+	scrollDates(date: string, oldDate?: string) {
 		this.$nextTick(() => {
 			const dateRef = this.$refs[date] as Array<HTMLDivElement>
 			const datesRef = this.$refs.dates as HTMLDivElement
 
 			if (datesRef.scrollLeft > (dateRef[0].offsetLeft + dateRef[0].offsetWidth)) return
 
-			ScrollTo.scrollTo(dateRef[0], 500, {
+			ScrollTo.scrollTo(dateRef[0], oldDate ? 500 : 1, {
 				container: datesRef,
 				offset: -(window.innerWidth / 2 - dateRef[0].offsetWidth / 2),
 				x: true,
