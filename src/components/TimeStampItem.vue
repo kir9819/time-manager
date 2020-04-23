@@ -95,7 +95,7 @@ export default class TimeStampItem extends Mappers {
 
 	start(): void {
 		this.timer = setTimeout(() => {
-			window.navigator.vibrate(10)
+			if (window.navigator && window.navigator.vibrate) window.navigator.vibrate(10)
 			clearTimeout(this.timer)
 
 			this.showInput()
