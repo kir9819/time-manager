@@ -79,6 +79,7 @@ export default class TimeStampsComponent extends Mappers {}
 				padding: 24px;
 				margin-top: 125px;
 				border-radius: 12px;
+				min-width: 250px;
 			}
 
 			&-label {

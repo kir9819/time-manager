@@ -48,11 +48,14 @@
 }
 
 input {
+	appearance: none;
+
 	background-color: var(--color-layout);
 	color: var(--root-color);
 	border: 1px solid;
 	border-radius: 8px;
-	padding: 4px 8px;
+	padding: 8px 12px;
+	width: 100%;
 
 	outline: none;
 
