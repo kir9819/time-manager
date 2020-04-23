@@ -78,7 +78,7 @@ class RootMutations extends Mutations<RootState> {
 	stopTimeStamp(index: number): void {
 		const timeStampByIndex = this.state.timeStampList.find(ts => ts.index === index)
 
-		if (timeStampByIndex) {
+		if (timeStampByIndex && timeStampByIndex.timer) {
 			const { currentTimeStamp } = timeStampByIndex
 
 			if (currentTimeStamp) {
@@ -90,7 +90,7 @@ class RootMutations extends Mutations<RootState> {
 	clearInterval(index: number): void {
 		const timeStampByIndex = this.state.timeStampList.find(ts => ts.index === index)
 
-		if (timeStampByIndex) {
+		if (timeStampByIndex && timeStampByIndex.timer) {
 			clearInterval(timeStampByIndex.timer)
 			timeStampByIndex.timer = 0
 		}
@@ -133,15 +133,11 @@ class RootActions extends Actions<RootState, RootGetters, RootMutations, RootAct
 				this.commit('select', findRunning.index)
 				this.commit('stopTimeStamp', findRunning.index)
 				this.dispatch('run', findRunning.index)
-			} else {
-				this.commit('select', timeStamps[0].index)
 			}
 		} else if (this.state.timeStampList.length === 0) {
 			for (let i = 0; i < DEFAULT_TIME_STAMPS_AMOUNT; i += 1) {
 				this.commit('add')
 			}
-
-			this.commit('select', 1)
 		}
 	}
 
@@ -188,8 +184,8 @@ class RootActions extends Actions<RootState, RootGetters, RootMutations, RootAct
 	}
 
 	stop(index: number): void {
-		this.commit('clearInterval', index)
 		this.commit('stopTimeStamp', index)
+		this.commit('clearInterval', index)
 		this.commit('saveDataInDB')
 	}
 
