@@ -1,0 +1,1 @@
+#page-list{display:flex;flex-direction:column;align-items:center}#page-list .list-item{padding:16px 8px;margin:4px;border-radius:8px;max-width:320px;width:100%;box-sizing:border-box}#page-list .list-item-index{margin-right:8px}#page-list .list-item-clear{cursor:pointer;margin-left:8px;font-size:12px}#page-list .clear-all{cursor:pointer;margin-top:16px;font-size:12px}
