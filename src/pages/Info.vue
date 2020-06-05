@@ -49,7 +49,6 @@ const Mappers = Vue.extend({
 	},
 })
 
-
 @Component({
 	name: 'InfoPage',
 	filters: {

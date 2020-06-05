@@ -1,4 +1,4 @@
-function getDate(fullDate: Date = new Date()): string {
+export function getDate(fullDate: Date = new Date()): string {
 	const year = fullDate.getFullYear()
 	const month = (fullDate.getMonth() + 1).toString().padStart(2, '0')
 	const date = fullDate.getDate().toString().padStart(2, '0')
@@ -6,7 +6,7 @@ function getDate(fullDate: Date = new Date()): string {
 	return `${year}-${month}-${date}`
 }
 
-function totalTimeString(time: number) {
+export function totalTimeString(time: number) {
 	let totalTime = time
 
 	const days = Math.floor(totalTime / 86400)
@@ -28,7 +28,11 @@ function totalTimeString(time: number) {
 	return daysString + hoursString + minString + secString
 }
 
-export {
-	getDate,
-	totalTimeString,
+export function downloadFile(file: Blob, name: string): void {
+	const link = document.createElement('a')
+	link.href = window.URL.createObjectURL(file)
+	link.setAttribute('download', name)
+	document.body.appendChild(link)
+	link.click()
+	link.remove()
 }

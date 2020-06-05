@@ -122,7 +122,7 @@ class RootMutations extends Mutations<RootState> {
 
 class RootActions extends Actions<RootState, RootGetters, RootMutations, RootActions> {
 	async $init(): Promise<void> {
-		const timeStamps = await this.getDataFromDB()
+		const timeStamps: Array<TimeStamps> = await this.dispatch('getDataFromDB')
 
 		if (timeStamps.length > 0) {
 			this.commit('createStore', timeStamps)

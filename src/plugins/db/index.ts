@@ -22,6 +22,12 @@ interface TimeStampsDB extends DBSchema {
 	}
 }
 
+export interface IDBObject {
+	version: number
+	days: Array<{ date: string, timeStamps: Array<string> }>
+	timeStamps: Array<TimeStamps>
+}
+
 const migrations = [
 	/* from 2 to 3 */
 	async function (db: IDBPDatabase<TimeStampsDB>, oldVersion: number, newVersion: number | null, transaction: IDBPTransaction<TimeStampsDB, ('timeStamps' | 'days')[]>) {
@@ -165,6 +171,41 @@ class DB {
 		const timeStamps = await request.getAllFromIndex('timeStamps', 'date', date)
 
 		return timeStamps.sort((ts1, ts2) => ts1.index - ts2.index)
+	}
+
+	static async createDBFromObject(db: IDBObject): Promise<void> {
+		if (db.version !== DB_VERSION) throw new Error('Version not supported')
+
+		const request = await dbRequest
+		const transaction = request.transaction(['days', 'timeStamps'], 'readwrite')
+
+		Promise.all([
+			...db.timeStamps.map(ts => {
+				if (ts.currentTimeStamp) {
+					ts.currentTimeStamp.start = new Date(ts.currentTimeStamp.start)
+					ts.currentTimeStamp.end = new Date(ts.currentTimeStamp.end)
+				}
+
+				ts.timeStamps.forEach(timeStamp => {
+					timeStamp.start = new Date(timeStamp.start)
+					timeStamp.end = new Date(timeStamp.end)
+				})
+
+				return transaction.objectStore('timeStamps').put(ts)
+			}),
+			...db.days.map(day => transaction.objectStore('days').put(day)),
+		])
+
+		await transaction.done
+	}
+
+	static async getDBObject(): Promise<IDBObject> {
+		const request = await dbRequest
+
+		const days = await request.getAll('days')
+		const timeStamps = await request.getAll('timeStamps')
+
+		return { version: DB_VERSION, days, timeStamps }
 	}
 }
 

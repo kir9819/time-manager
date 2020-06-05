@@ -6,6 +6,7 @@
 			<router-link to="/">Home</router-link>
 			<!-- <router-link to="/list">List</router-link> -->
 			<router-link to="/info">Info</router-link>
+			<router-link to="/settings">Settings</router-link>
 		</nav>
 	</div>
 </template>
@@ -13,6 +14,10 @@
 <style lang="scss">
 * {
 	box-sizing: border-box;
+}
+
+body {
+	min-width: 320px;
 }
 
 #app {
